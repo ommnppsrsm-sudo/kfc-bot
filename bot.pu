@@ -1,0 +1,27 @@
+import sys
+import types
+
+# Создаем заглушку для старого модуля audioop, который требует discord.py
+if 'audioop' not in sys.modules:
+    mock_audioop = types.ModuleType('audioop')
+    mock_audioop.error = Exception
+    sys.modules['audioop'] = mock_audioop
+
+import discord
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_line_prefix="!", intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f"Бот {bot.user} успешно запустился и готов к работе!")
+
+@bot.command()
+async def привет(ctx):
+    await ctx.send(f"Привет, {ctx.author.mention}! Я бот KFC Kombat!")
+
+# Сюда автоматически подставится ваш рабочий токен
+bot.run("MTUzMzE1Nzc4ODg4MzM1MzcyMg.Gv94uO.8blobFJA7pNrjtIzkNFjvIxQIvEU-FoD2xYxa0")
